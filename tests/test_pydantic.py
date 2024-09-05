@@ -662,3 +662,20 @@ def test_nested_base_model_union_model_default():
         "type": "record",
     }
     assert_schema(PyType, expected)
+
+
+def test_email_string_field():
+    class PyType(pydantic.BaseModel):
+        field_a: pydantic.EmailStr
+
+    expected = {
+        "type": "record",
+        "name": "PyType",
+        "fields": [
+            {
+                "name": "field_a",
+                "type": "string",
+            }
+        ],
+    }
+    assert_schema(PyType, expected)

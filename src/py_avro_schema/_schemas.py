@@ -1005,6 +1005,25 @@ class PydanticSchema(RecordSchema):
         raise ValueError(f"{field_name} is not a field of {self.py_type}")  # Should never happen
 
 
+class PydanticEmailStr(Schema):
+    """An Avro string schema for a :class:`pydantic.EmailStr` type"""
+
+    @classmethod
+    def handles_type(cls, py_type: Type) -> bool:
+        """Whether this schema class can represent a given Python class"""
+        try:
+            import pydantic
+
+            return py_type is pydantic.EmailStr
+        except ImportError:
+            # If Pydantic is **not** installed, we definitely do not **need** to handle pydantic.emailStr
+            return False
+
+    def data(self, names: NamesType) -> JSONStr:
+        """Return the schema data"""
+        return "string"
+
+
 class PlainClassSchema(RecordSchema):
     """An Avro record schema for a plain Python class with typed constructor method arguments"""
 
